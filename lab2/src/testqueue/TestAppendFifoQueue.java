@@ -32,11 +32,48 @@ public class TestAppendFifoQueue {
 	public void twoEmpty() {
 		try {
 			myIntQueue.append(myInt2Queue);
-			fail("...");
+			fail("Could append to equal lists.");
 		}
 		catch(IllegalArgumentException e) {
 			
 		}
 	}
-
+	@Test
+	public void emptyQueueAppendNoneEmptyQueue(){
+		myInt2Queue.add(1);
+		myIntQueue.append(myInt2Queue);
+		assertEquals((int) myIntQueue.peek(), 1);
+	}
+	@Test
+	public void noneEmptyQueueAppendEmptyQueue() {
+		myIntQueue.add(1);
+		myIntQueue.append(myInt2Queue);
+		assertEquals((int) myIntQueue.peek(), 1);
+	}
+	@Test
+	public void appendTwoQueue(){
+		myIntQueue.add(1);
+		myIntQueue.add(2);
+		myInt2Queue.add(3);
+		myInt2Queue.add(4);
+		myIntQueue.append(myInt2Queue);
+		assertEquals((int)myIntQueue.poll(), 1);
+		assertEquals((int)myIntQueue.poll(), 2);
+		assertEquals((int)myIntQueue.poll(), 3);
+		assertEquals((int)myIntQueue.poll(), 4);
+	}
+	@Test
+	public void appendQueuewithitself(){
+		{
+			try{
+			myIntQueue.add(1);
+			myIntQueue.add(2);
+			myIntQueue.add(3);
+			myIntQueue.add(4);
+			myIntQueue.append(myIntQueue);
+			}catch (IllegalArgumentException e){
+				
+			}
+		}
+	}
 }
