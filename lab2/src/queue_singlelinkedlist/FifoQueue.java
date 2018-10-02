@@ -84,8 +84,11 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 			throw new IllegalArgumentException();
 		}
 		QueueNode<E> temp = last.next;
+		QueueNode<E> temp2 = q.last.next;
 		q.last.next = temp;
-		last.next = q.last.next;
+		last.next = temp2;
+		last = q.last;
+		size = size + q.size();
 	}
 	/**
 	 * Returns an iterator over the elements in this queue
