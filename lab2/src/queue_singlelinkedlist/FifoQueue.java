@@ -18,7 +18,8 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 	 * 
 	 * @param e
 	 *            the element to insert
-	 * @return true if it was possible to add the element to this queue, else false
+	 * @return true if it was possible to add the element to this queue, else
+	 *         false
 	 */
 	public boolean offer(E e) {
 
@@ -55,10 +56,10 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 		}
 		return last.next.element;
 	}
-	
+
 	/**
-	 * Retrieves and removes the head of this queue, or null if this queue is empty.
-	 * post: the head of the queue is removed if it was not empty
+	 * Retrieves and removes the head of this queue, or null if this queue is
+	 * empty. post: the head of the queue is removed if it was not empty
 	 * 
 	 * @return the head of this queue, or null if the queue is empty
 	 */
@@ -71,25 +72,36 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 		size--;
 		return tempReturn.element;
 	}
-	
+
 	/**
-	 * Appends the specified queue to this queue
-	 * post: all elements from the specified queue are appended
-	 * to this queue. The specified queue (q) is empty after the call.
-	 * @param q the queue to append
-	 * @throws IllegalrgumentException if this queue and q are identical
+	 * Appends the specified queue to this queue post: all elements from the
+	 * specified queue are appended to this queue. The specified queue (q) is
+	 * empty after the call.
+	 * 
+	 * @param q
+	 *            the queue to append
+	 * @throws IllegalrgumentException
+	 *             if this queue and q are identical
 	 */
 	public void append(FifoQueue<E> q) {
-		if(this.equals(q)) {
+		QueueNode<E> temp = null;
+		QueueNode<E> temp2 = null;
+		if (this.equals(q) || (q.last == null && last == null)) {
 			throw new IllegalArgumentException();
 		}
-		QueueNode<E> temp = last.next;
-		QueueNode<E> temp2 = q.last.next;
-		q.last.next = temp;
-		last.next = temp2;
-		last = q.last;
-		size = size + q.size();
+		if (last == null) {
+			last = q.last;
+			size = q.size();
+		} else if (q.last != null) {
+			temp = last.next;
+			temp2 = q.last.next;
+			last.next = temp2;
+			q.last.next = temp;
+			last = q.last;
+			size = size + q.size();
+		}		
 	}
+
 	/**
 	 * Returns an iterator over the elements in this queue
 	 * 
