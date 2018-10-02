@@ -47,6 +47,7 @@ public class TestAppendFifoQueue {
 		assertEquals((int) myIntQueue.size(), 2);
 		assertEquals((int) myIntQueue.poll(), 1);
 		assertEquals((int) myIntQueue.peek(), 4);
+		assertTrue(myInt2Queue.isEmpty());
 	}
 
 	@Test
@@ -57,6 +58,7 @@ public class TestAppendFifoQueue {
 		assertEquals((int) myIntQueue.size(), 2);
 		assertEquals((int) myIntQueue.poll(), 1);
 		assertEquals((int) myIntQueue.peek(), 3);
+		assertTrue(myInt2Queue.isEmpty());
 	}
 
 	@Test
