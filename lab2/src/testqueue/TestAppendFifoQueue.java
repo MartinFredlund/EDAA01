@@ -32,14 +32,9 @@ public class TestAppendFifoQueue {
 	 */
 	@Test
 	public void twoEmpty() {
-		try {
-			myIntQueue.append(myInt2Queue);
-			fail("Could append to equal lists.");
-		} catch (IllegalArgumentException e) {
-
-		}
 		assertTrue("Queue should be empty", myIntQueue.isEmpty());
 		assertTrue("Queue should be empty", myInt2Queue.isEmpty());
+		myIntQueue.append(myInt2Queue);
 	}
 
 	/**
@@ -80,11 +75,11 @@ public class TestAppendFifoQueue {
 		myInt2Queue.add(3);
 		myInt2Queue.add(4);
 		myIntQueue.append(myInt2Queue);
-		assertEquals("Size should be 4",(int) myIntQueue.size(), 4);
-		assertEquals("First element should have been 1",(int) myIntQueue.poll(), 1);
-		assertEquals("Second element should have been 2",(int) myIntQueue.poll(), 2);
-		assertEquals("Third element should have been 3",(int) myIntQueue.poll(), 3);
-		assertEquals("Fourth element should have been 3",(int) myIntQueue.poll(), 4);
+		assertEquals("Size should be 4", (int) myIntQueue.size(), 4);
+		assertEquals("First element should have been 1", (int) myIntQueue.poll(), 1);
+		assertEquals("Second element should have been 2", (int) myIntQueue.poll(), 2);
+		assertEquals("Third element should have been 3", (int) myIntQueue.poll(), 3);
+		assertEquals("Fourth element should have been 3", (int) myIntQueue.poll(), 4);
 		assertTrue("The queue to append should be empty", myInt2Queue.isEmpty());
 	}
 
