@@ -70,6 +70,9 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 		QueueNode<E> tempReturn = last.next;
 		last.next = last.next.next;
 		size--;
+		if (size == 0) {
+			last = null;
+		}
 		return tempReturn.element;
 	}
 
@@ -85,20 +88,18 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 	 */
 	public void append(FifoQueue<E> q) {
 		QueueNode<E> head = null;
-		QueueNode<E> secondHead = null;
-		if (this.equals(q) || (q.last == null && last == null)) {
+		if (this == q) {
 			throw new IllegalArgumentException();
 		}
 		if (last == null) {
 			last = q.last;
 			size = q.size();
 		} else if (q.last != null) {
-			head = last.next;
-			secondHead = q.last.next;
-			last.next = secondHead;
-			q.last.next = head;
-			last = q.last;
-			size = size + q.size();
+			head = q.last.next;
+			q.last.next = last.next;
+			last.next = head;
+			last = q.last;			
+			size += q.size();
 		}
 		q.last = null;
 		q.size = 0;
