@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -20,7 +21,13 @@ import javafx.stage.Stage;
 import textproc.*;
 
 public class BookReaderController extends Application {
-
+	ObservableList<Entry<String, Integer>> words;
+	ListView<Entry<String, Integer>> listView;
+	Button alpha = new Button("Alphabetic");
+	Button freq = new Button("Frequency");
+	Button find = new Button("Find");
+	TextField text = new TextField("");
+	HBox hbox = new HBox();
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane root = new BorderPane();
@@ -47,15 +54,12 @@ public class BookReaderController extends Application {
 		
 		
 		
-		ObservableList<Entry<String, Integer>> words = FXCollections.observableArrayList(counter.getWords());
-		ListView<Entry<String, Integer>> listView = new ListView<>(words);
+		words = FXCollections.observableArrayList(counter.getWords());
+		listView = new ListView<>(words);
 		root.setCenter(listView);
 		
-		HBox hbox = new HBox();
-		Button alpha = new Button("Alphabetic");
-		Button freq = new Button("Frequency");
-		Button find = new Button("Find");
-		TextField text = new TextField("");
+		
+		
 		hbox.getChildren().addAll(alpha, freq, text, find);
 		freq.setOnAction(event -> {
 			words.sort(new WordCountComparator());
@@ -65,21 +69,14 @@ public class BookReaderController extends Application {
 			words.addAll(counter.getWords());
 		});
 		find.setOnAction(event -> {
-			String findWord = text.getText();
-			int posInList = -1;
-		    for(int i = 0; i < words.size(); i++){
-		   	if(words.get(i).getKey().equals(findWord))
-		   	{
-		   		posInList = i;
-		   		break;
-		   	}
-		    }
-		 
-		    if(posInList != -1){
-		    listView.scrollTo(posInList);
-		    }
+			search();
 		   
 		});
+		text.setOnAction(event ->{
+			search();
+		}
+		
+				);
 		
 		HBox.setHgrow(text, Priority.ALWAYS);
 		root.setBottom(hbox);
@@ -87,10 +84,39 @@ public class BookReaderController extends Application {
 		primaryStage.setTitle("BookReader");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		
+		
 	}
+	public void search(){
+		String findWord = text.getText().trim().toLowerCase();
+		int posInList = -1;
+	    for(int i = 0; i < words.size(); i++){
+	   	if(words.get(i).getKey().equals(findWord))
+	   	{
+	   		posInList = i;
+	   		break;
+	   	}
+	    }
+	 
+	    if(posInList != -1){
+	    listView.scrollTo(posInList);
+	    listView.getSelectionModel().select(posInList);
+	    }
+	    else{
+	    	Alert alt = new Alert(Alert.AlertType.WARNING);
+	    	alt.setHeaderText("Warning");
+	    	alt.setContentText("Can not find your word, try again.");
+	    	alt.show();
+	    }
+	}
+	
+	
 
 	public static void main(String[] args) {
 		Application.launch(args);
 	}
+	
+	
+	
 
 }
