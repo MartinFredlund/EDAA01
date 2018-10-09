@@ -24,9 +24,7 @@ public class GeneralWordCounter implements TextProcessor {
 			wordCounter.put(w, 1);
 		}
 	}
-
-
-
+	
 	@Override
 	public void report() {
 		Set<Map.Entry<String, Integer>> wordSet = wordCounter.entrySet();
@@ -36,11 +34,10 @@ public class GeneralWordCounter implements TextProcessor {
 			System.out.println(wordList.get(i));
 		}
 		
-//		for(String w : wordCounter.keySet()) {
-//			if(wordCounter.get(w) > 200) {
-//				System.out.println(w + " " + wordCounter.get(w));
-//			}
-//		}
+	}
+	
+	public Set<Map.Entry<String, Integer>> getWords() {
+		return wordCounter.entrySet();
 	}
 
 }
