@@ -36,14 +36,14 @@ public class BookReaderController extends Application {
 
 		Scanner scan = new Scanner(new File("undantagsord.txt"));
 		Set<String> stopwords = new HashSet<>();
-		scan.useDelimiter("(\\s|,|\\.|:|;|!|\\?|'|\\\")+");
+		scan.useDelimiter("(\\s|,|\\.|:|;|!|\\?|´|'|\\\")+");
 		while (scan.hasNext()) {
 			String word = scan.next().toLowerCase();
 			stopwords.add(word);
 		}
 		GeneralWordCounter counter = new GeneralWordCounter(stopwords);
 		Scanner s = new Scanner(new File("nilsholg.txt"));
-		s.useDelimiter("(\\s|,|\\.|:|;|!|\\?|'|\\\")+");
+		s.useDelimiter("(\\s|,|\\.|:|;|!|\\?|´|'|\\\")+");
 		while (s.hasNext()) {
 			String word = s.next().toLowerCase();
 			counter.process(word);
