@@ -120,6 +120,53 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 
 		private QueueIterator() {
 			pos = last;
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			counter = 0;
 		}
 

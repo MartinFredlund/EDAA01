@@ -95,6 +95,7 @@ public class TestAppendFifoQueue {
 				myIntQueue.add(3);
 				myIntQueue.add(4);
 				myIntQueue.append(myIntQueue);
+				fail("");
 			} catch (IllegalArgumentException e) {
 				// successful test
 			}
