@@ -1,5 +1,5 @@
 package fractal;
-import mountain.mount;
+import mountain.Mountain;
 
 import javafx.concurrent.Task;
 import javafx.animation.Animation;
@@ -47,7 +47,7 @@ public class FractalApplication extends Application {
 	@Override
 	public void start(Stage stage) {
 		fractals = new Fractal[2];
-		fractals[0] = new mount(new Point(100,400), new Point(370,200), new Point(510,443), 100);
+		fractals[0] = new Mountain(new Point(100,400), new Point(370,200), new Point(510,443), 50);
 		fractals[1] = new Koch(300);	
 		actFractal = fractals[0];
 		BorderPane root = new BorderPane();
@@ -158,7 +158,7 @@ public class FractalApplication extends Application {
 					}
 				});
 				} catch (ThreadDeath e) { // do nothing
-//					System.out.println("beräkningen avbruten");
+//					System.out.println("berï¿½kningen avbruten");
 				} catch(Throwable e){
 //					System.err.println(e.getMessage());
 					e.printStackTrace(System.err);
