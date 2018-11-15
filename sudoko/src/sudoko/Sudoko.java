@@ -1,11 +1,15 @@
 package sudoko;
 
+import java.util.Arrays;
+
 public class Sudoko {
 	private int[][] board = new int[8][8];
 	private int[][] refBoard = new int[8][8];
+	private boolean boardDone = false;
 	public Sudoko(int[][] board) {
 		this.board = board;
 		this.refBoard = board;
+		
 	}
 
 	public int getValue(int x, int y) {
@@ -43,13 +47,7 @@ public class Sudoko {
 			}
 			System.out.println("");
 			
-//			for (int i = 1; i < 10; i++) {
-//				if (ruleCheck(i, x, y)) {
-//					board[x][y] = i;
-//					return true;
-//				}
-//			}
-			refBoard = board;
+			boardDone = true;
 			return true;
 		}
 		// check om rutan är tom
@@ -68,14 +66,13 @@ public class Sudoko {
 					board[x][y] = i;
 					int[] newXY = next(x, y);
 					solve(newXY[0], newXY[1]);
-				} else if(i == 9){
+				}else if(boardDone){
+					return true;
+				}
+				else if(i == 9){
 					board[x][y] = 0;
 				}
 			}
-		}
-		
-		if(x == 0 && y == 0 && board[x][y]!=0){
-			return true;
 		}
 		return false;
 	}
