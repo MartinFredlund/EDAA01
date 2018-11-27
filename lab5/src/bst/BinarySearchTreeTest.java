@@ -25,6 +25,17 @@ class BinarySearchTreeTest {
 		assertTrue(myBinarySearchTree.height() == 3);
 	}
 	
+
+	@Test
+	void testHeightEmpty() {
+		assertTrue(myBinarySearchTree.height() == 0);
+	}
+	
+	@Test
+	void testsizeEmpty() {
+		assertTrue(myBinarySearchTree.size() == 0);
+	}
+	
 	@Test
 	void testAdd() {
 		assertTrue(myBinarySearchTree.add(3));
@@ -35,6 +46,12 @@ class BinarySearchTreeTest {
 		assertTrue(myBinarySearchTree.root.right.element == 21);
 		assertTrue(myBinarySearchTree.root.right.right.element == 45);
 		myBinarySearchTree.printTree();
+	}
+	
+	@Test
+	void testAddDubletter() {
+		assertTrue(myBinarySearchTree.add(3));
+		assertFalse(myBinarySearchTree.add(3));
 	}
 	
 	@Test
