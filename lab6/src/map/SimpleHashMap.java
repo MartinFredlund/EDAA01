@@ -1,4 +1,5 @@
 package map;
+
 import java.util.Random;
 
 public class SimpleHashMap<K, V> implements Map {
@@ -11,7 +12,7 @@ public class SimpleHashMap<K, V> implements Map {
 	public SimpleHashMap() {
 		table = (Entry<K, V>[]) new Entry[16];
 	}
-	
+
 	/**
 	 * Constructs an empty hashmap with the specified initial capacity and the
 	 * default load factor (0.75).
@@ -19,24 +20,34 @@ public class SimpleHashMap<K, V> implements Map {
 	public SimpleHashMap(int capacity) {
 		table = (Entry<K, V>[]) new Entry[capacity];
 	}
-	
+
 	public static void main(String[] args) {
 		Random rand = new Random();
-		SimpleHashMap<Integer,Integer> test = new SimpleHashMap(10);
-		for(int i = 0; i<40 ; i++) {
-			int rndNumb = rand.nextInt(40)-8;
-			test.put(rndNumb, rndNumb);
+		SimpleHashMap<Integer, Integer> test = new SimpleHashMap(10);
+		for (int i = 0; i < 40; i++) {
+			int rndNumb = rand.nextInt(40) - 8;
+			int rndNumb1 = rand.nextInt(40) -8;
+			test.put(rndNumb, rndNumb1);
 		}
 		System.out.println(test.show());
 		System.out.println(test.table.length);
 	}
-	
+
 	public String show() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < table.length; i++) {
-			if(table[i] != null) {
-			sb.append(table[i].getKey() + "=" + table[i].getValue() + "\n");
-		}}
+			if (table[i] != null) {
+				sb.append(i + "   " + table[i].toString());
+				Entry<K, V> temp = table[i];
+				while (temp.next != null) {
+					sb.append(" " + temp.getNext().toString());
+					temp = temp.getNext();
+				}
+				sb.append("\n");
+			} else {
+				sb.append(i + "   null\n");
+			}
+		}
 		return sb.toString();
 	}
 
@@ -44,7 +55,11 @@ public class SimpleHashMap<K, V> implements Map {
 	public Object get(Object key) {
 		Entry<K, V> entry = find(index((K) key), (K) key);
 		if (entry != null) {
-			return entry.value;
+			Entry<K, V> temp = entry;
+			while (temp.next != null) {
+				temp = temp.getNext();
+			}
+			return temp;
 		}
 
 		return null;
@@ -55,31 +70,30 @@ public class SimpleHashMap<K, V> implements Map {
 		return countElements() == 0;
 	}
 
+	
 	@Override
 	public Object put(Object key, Object value) {
 		Entry<K, V> entry = find(index((K) key), (K) key);
 		if (entry != null) {
-			V temp = entry.value;
-			entry.setValue((V)value);
-			return temp;
+			V tempV = entry.getValue();
+			entry.setNext(new Entry<K, V>((K) key, (V) value));
+			return tempV;
+		} else {
+			table[index((K) key)] = new Entry<K, V>((K) key, (V) value);
 		}
 		if (countElements() >= 0.75 * table.length) {
 			rehash();
 		}
-		table[size()] = new Entry<K, V>((K) key, (V) value);
-		
 		return null;
 	}
 
 	@Override
 	public Object remove(Object key) {
-		if(!isEmpty()) {
+		if (!isEmpty()) {
 			int index = index((K) key);
-			if ( index != -1) {
-				V temp = table[index].value;
+				V temp = table[index].getValue();
 				table[index] = null;
 				return temp;
-			}
 		}
 		return null;
 	}
@@ -108,32 +122,36 @@ public class SimpleHashMap<K, V> implements Map {
 	}
 
 	private int index(K key) {
-		if (!isEmpty()) {
-
-			for (int i = 0; i < table.length; i++) {
-				if (table[i] != null && table[i].getKey().equals(key)) {
-					return i;
-				}
-			}
-		}
-		return -1;
+		return Math.abs(key.hashCode() % table.length);
 	}
 
 	private Entry<K, V> find(int index, K key) {
-		if ((index > -1 && index < table.length) && table[index].key.equals(key)) {
+		if (table[index] != null && key.equals(table[index].getKey())) {
+			System.out.println("test");
 			return table[index];
+			
 		} else {
 			return null;
 		}
 	}
 
-	public class Entry<K, V> implements Map.Entry<K, V> {
-		K key;
-		V value;
+	private static class Entry<K, V> implements Map.Entry<K, V> {
+		private K key;
+		private V value;
+		private Entry<K, V> next;
 
 		public Entry(K key, V value) {
 			this.key = key;
 			this.value = value;
+		}
+
+		public Entry<K, V> setNext(Entry<K, V> next) {
+			this.next = next;
+			return this.next;
+		}
+
+		public Entry<K, V> getNext() {
+			return next;
 		}
 
 		@Override
