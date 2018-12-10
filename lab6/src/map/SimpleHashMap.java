@@ -25,8 +25,8 @@ public class SimpleHashMap<K, V> implements Map {
 		Random rand = new Random();
 		SimpleHashMap<Integer, Integer> test = new SimpleHashMap(10);
 		for (int i = 0; i < 40; i++) {
-			int rndNumb = rand.nextInt(40) - 8;
-			int rndNumb1 = rand.nextInt(40) -8;
+			int rndNumb = rand.nextInt(20) - 8;
+			int rndNumb1 = rand.nextInt(20) -8;
 			test.put(rndNumb, rndNumb1);
 		}
 		System.out.println(test.show());
@@ -73,17 +73,38 @@ public class SimpleHashMap<K, V> implements Map {
 	
 	@Override
 	public Object put(Object key, Object value) {
-		Entry<K, V> entry = find(index((K) key), (K) key);
-		if (entry != null) {
-			V tempV = entry.getValue();
-			entry.setNext(new Entry<K, V>((K) key, (V) value));
-			return tempV;
-		} else {
-			table[index((K) key)] = new Entry<K, V>((K) key, (V) value);
+		int index = index((K) key);
+		
+		int endPoint = table.length-index;
+		for(int i = 0; i < endPoint;i++) {
+			Entry<K, V> entry = find(index + i, (K) key);
+			if (entry != null && entry.getKey().equals(key)) {
+				
+				Entry<K, V> temp = entry;
+				while (temp.next != null) {
+					temp = temp.getNext();
+				}
+				V tempV = temp.getValue();
+				temp.setNext(new Entry<K, V>((K) key, (V) value));
+				
+				return tempV;
+			}
+			
+			if(entry == null) {
+				
+				table[index+i] = new Entry<K, V>((K) key, (V) value);
+				if (countElements() >= 0.75 * table.length) {
+					rehash();
+				}
+				return null;
+			}
+			if(i == (table.length-index-1)) {
+				i = -index;
+				endPoint = index;
+			}
 		}
-		if (countElements() >= 0.75 * table.length) {
-			rehash();
-		}
+		  
+		
 		return null;
 	}
 
@@ -131,7 +152,8 @@ public class SimpleHashMap<K, V> implements Map {
 			return table[index];
 			
 		} else {
-			return null;
+			
+		return null;
 		}
 	}
 
