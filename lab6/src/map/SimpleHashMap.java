@@ -24,13 +24,16 @@ public class SimpleHashMap<K, V> implements Map {
 	public static void main(String[] args) {
 		Random rand = new Random();
 		SimpleHashMap<Integer, Integer> test = new SimpleHashMap(10);
-		for (int i = 0; i < 40; i++) {
-			int rndNumb = rand.nextInt(20) - 8;
-			int rndNumb1 = rand.nextInt(20) -8;
-			test.put(rndNumb, rndNumb1);
-		}
+		// for (int i = 0; i < 40; i++) {
+		// int rndNumb = rand.nextInt(20) - 8;
+		// int rndNumb1 = rand.nextInt(20) -8;
+		// test.put(rndNumb, rndNumb1);
+		// }
+		test.put(1, 1);
+		test.put(17, 17);
 		System.out.println(test.show());
 		System.out.println(test.table.length);
+		System.out.println(test.countElements());
 	}
 
 	public String show() {
@@ -59,7 +62,7 @@ public class SimpleHashMap<K, V> implements Map {
 			while (temp.next != null) {
 				temp = temp.getNext();
 			}
-			return temp;
+			return temp.getValue();
 		}
 
 		return null;
@@ -70,41 +73,41 @@ public class SimpleHashMap<K, V> implements Map {
 		return countElements() == 0;
 	}
 
-	
 	@Override
 	public Object put(Object key, Object value) {
 		int index = index((K) key);
-		
-		int endPoint = table.length-index;
-		for(int i = 0; i < endPoint;i++) {
+
+		int endPoint = table.length - index;
+		for (int i = 0; i < endPoint; i++) {
 			Entry<K, V> entry = find(index + i, (K) key);
 			if (entry != null && entry.getKey().equals(key)) {
-				
+
 				Entry<K, V> temp = entry;
 				while (temp.next != null) {
 					temp = temp.getNext();
 				}
 				V tempV = temp.getValue();
 				temp.setNext(new Entry<K, V>((K) key, (V) value));
-				
+
 				return tempV;
 			}
-			
-			if(entry == null) {
-				
-				table[index+i] = new Entry<K, V>((K) key, (V) value);
+
+			else if (table[index + i] == null) {
+
+				table[index + i] = new Entry<K, V>((K) key, (V) value);
 				if (countElements() >= 0.75 * table.length) {
 					rehash();
 				}
 				return null;
 			}
-			if(i == (table.length-index-1)) {
+
+			if (i == (table.length - index - 1)) {
 				i = -index;
-				endPoint = index;
+				endPoint = Math.min(index, table.length - index);
 			}
 		}
-		  
-		
+
+		show();
 		return null;
 	}
 
@@ -112,9 +115,12 @@ public class SimpleHashMap<K, V> implements Map {
 	public Object remove(Object key) {
 		if (!isEmpty()) {
 			int index = index((K) key);
+			if (table[index] != null && table[index].key.equals(key)) {
 				V temp = table[index].getValue();
 				table[index] = null;
 				return temp;
+			}
+
 		}
 		return null;
 	}
@@ -147,14 +153,16 @@ public class SimpleHashMap<K, V> implements Map {
 	}
 
 	private Entry<K, V> find(int index, K key) {
-		if (table[index] != null && key.equals(table[index].getKey())) {
-			System.out.println("test");
-			return table[index];
-			
-		} else {
-			
-		return null;
+		int indexTemp = index;
+		while (indexTemp < table.length && table[indexTemp] != null) {
+			if (key.equals(table[indexTemp].getKey())) {
+				return table[indexTemp];
+
+			}
+			indexTemp++;
 		}
+		return null;
+
 	}
 
 	private static class Entry<K, V> implements Map.Entry<K, V> {
