@@ -1,21 +1,22 @@
-package sudoko;
+package sudoku;
 
 import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sudoko.Sudoko;
 
-public class SudokoTest {
+import sudoku.Sudoku;
+
+public class SudokuTest {
 	private int[][] myBoard;
-	private Sudoko mySudoko;
+	private Sudoku mySudoko;
 
 	@Before
 	public void setUp() throws Exception {
 		// myIntQueue = new FifoQueue<Integer>();
 		// myStringQueue = new FifoQueue<String>();
 		myBoard = new int[8][8];
-		mySudoko = new Sudoko(myBoard);
+		mySudoko = new Sudoku(myBoard);
 	}
 
 	@After
@@ -37,7 +38,7 @@ public class SudokoTest {
 				{ 0, 4, 0, 6, 1, 8, 3, 9, 7 },
 				{ 7, 6, 1, 0, 4, 0, 5, 2, 8 },
 				{ 9, 3, 8, 7, 2, 5, 0, 6, 0 } };
-		mySudoko = new Sudoko(myBoard);
+		mySudoko = new Sudoku(myBoard);
 		assertTrue(mySudoko.solver());
 	}
 	
@@ -54,7 +55,7 @@ public class SudokoTest {
 				{ 0, 0, 1, 7, 0, 0, 9, 0, 6 },
 				{ 0, 8, 0, 0, 3, 0, 0, 2, 0 },
 				{ 3, 0, 2, 9, 0, 4, 0, 0, 5 } };
-		mySudoko = new Sudoko(myBoard);
+		mySudoko = new Sudoku(myBoard);
 		assertTrue(mySudoko.solver());
 	}
 	@Test
@@ -70,7 +71,7 @@ public class SudokoTest {
 				{ 0, 0, 1, 7, 0, 0, 9, 0, 0 },
 				{ 0, 8, 0, 0, 3, 0, 0, 2, 0 },
 				{ 3, 0, 2, 9, 0, 4, 0, 0, 9 } };
-		mySudoko = new Sudoko(myBoard);
+		mySudoko = new Sudoku(myBoard);
 		assertTrue(mySudoko.solver());
 	}
 

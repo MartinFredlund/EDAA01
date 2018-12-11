@@ -1,12 +1,12 @@
-package sudoko;
+package sudoku;
 
 import java.util.Arrays;
 
-public class Sudoko {
+public class Sudoku {
 	private int[][] board = new int[8][8];
 	private int[][] refBoard = new int[8][8];
 
-	public Sudoko(int[][] board) {
+	public Sudoku(int[][] board) {
 		this.board = board;
 		this.refBoard = board;
 
