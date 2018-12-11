@@ -1,9 +1,13 @@
 package map;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.HashSet;
 import java.util.Random;
 
-public class SimpleHashMap<K, V> implements Map {
+public class SimpleHashMap<K, V> implements Map<K, V> {
 	Entry<K, V>[] table;
+	int size = 0;
 
 	/**
 	 * Constructs an empty hashmap with the default initial capacity (16) and the
@@ -22,21 +26,151 @@ public class SimpleHashMap<K, V> implements Map {
 	}
 
 	public static void main(String[] args) {
-		Random rand = new Random();
+		// Random rand = new Random();
 		SimpleHashMap<Integer, Integer> test = new SimpleHashMap(10);
-		// for (int i = 0; i < 40; i++) {
-		// int rndNumb = rand.nextInt(20) - 8;
-		// int rndNumb1 = rand.nextInt(20) -8;
-		// test.put(rndNumb, rndNumb1);
+		// for (int i = 0; i < 10000; i++) {
+		// int rndNumb = rand.nextInt(2000) - 800;
+		// test.put(rndNumb, rndNumb);
+		// System.out.println(test.get(rndNumb));
 		// }
-		test.put(1, 1);
-		test.put(17, 17);
-		System.out.println(test.show());
-		System.out.println(test.table.length);
-		System.out.println(test.countElements());
+		// System.out.println(test.show());
+		java.util.Random random = new java.util.Random(123456);
+		HashSet<Integer> randNbrs = new HashSet<Integer>();
+		for (int i = 0; i < 100; i++) {
+			int r = random.nextInt(10000);
+			test.put(r, r);
+			randNbrs.add(r);
+		}
+		for (int i : randNbrs) {
+			System.out.println(test.get(i));
+		}
 	}
 
-	public String show() {
+	@Override
+	public V get(Object key) {
+		Entry<K, V> temp = find(index((K) key), (K) key);
+
+		if (temp != null) {
+			return temp.getValue();
+		}
+		return null;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return size == 0;
+	}
+
+	@Override
+	public V put(K key, V value) {
+		Entry<K, V> temp = find(index(key), key);
+		if (temp != null) {
+			V oldValue = temp.getValue();
+			temp.setValue(value);
+			size++;
+			if (size() >= 0.75 * table.length) {
+				rehash();
+			}
+			return oldValue;
+		} else {
+			if (table[index(key)] == null) {
+				table[index(key)] = new Entry<K, V>((K) key, (V) value);
+				size++;
+			} else {
+				temp = table[index(key)];
+				while (temp.getNext() != null) {
+					temp = temp.getNext();
+				}
+				temp.setNext(new Entry<K, V>((K) key, (V) value));
+				size++;
+			}
+		}
+
+		if (size() >= 0.75 * table.length) {
+			rehash();
+		}
+		return null;
+	}
+
+	@Override
+	public V remove(Object key) {
+
+		if (!isEmpty()) {
+			Entry<K, V> temp = find(index((K) key), (K) key);
+			Entry<K, V> oldTemp = table[index((K) key)];
+
+			if (temp != null) {
+				V oldValue = temp.getValue();
+				if (temp.getKey().equals(oldTemp.getKey())) {
+					if (temp.next != null) {
+						table[index((K) key)] = temp.getNext();
+						size--;
+						return oldValue;
+					}
+				}
+				while (oldTemp.getNext() != null) {
+					if (oldTemp.getNext().getKey().equals(temp.getKey())) {
+						oldTemp.setNext(temp.getNext());
+						size--;
+						return oldValue;
+					} else if (oldTemp.getNext().getNext() == null) {
+						oldTemp.getNext().setNext(null);
+						size--;
+						return oldValue;
+					} else {
+						oldTemp = oldTemp.getNext();
+					}
+				}
+			}
+		}
+		return null;
+
+	}
+
+	@Override
+	public int size() {
+
+		return size;
+	}
+
+	private int index(K key) {
+		return Math.abs(key.hashCode() % table.length);
+	}
+
+	private Entry<K, V> find(int index, K key) {
+		Entry<K, V> temp = table[index];
+
+		while (temp != null) {
+			if (temp.getKey().equals(key)) {
+				return temp;
+			} else {
+				temp = temp.getNext();
+			}
+		}
+		return null;
+
+	}
+
+	private void rehash() {
+
+		Entry<K, V>[] tempTable = (Entry<K, V>[]) new Entry[table.length * 2];
+		Entry<K, V>[] oldTable = table;
+		size = 0;
+		table = tempTable;
+		for (int i = 0; i < oldTable.length; i++) {
+			Entry<K, V> temp = oldTable[i];
+			if (temp != null) {
+				while (temp.getNext() != null) {
+					put(temp.getKey(), temp.getValue());
+					temp = temp.getNext();
+				}
+				put(temp.getKey(), temp.getValue());
+			}
+
+		}
+	}
+
+	private String show() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < table.length; i++) {
 			if (table[i] != null) {
@@ -54,118 +188,21 @@ public class SimpleHashMap<K, V> implements Map {
 		return sb.toString();
 	}
 
-	@Override
-	public Object get(Object key) {
-		Entry<K, V> entry = find(index((K) key), (K) key);
-		if (entry != null) {
-			Entry<K, V> temp = entry;
-			while (temp.next != null) {
-				temp = temp.getNext();
-			}
-			return temp.getValue();
-		}
+//	private int countElements() {
+//		int counter = 0;
+//		for (int i = 0; i < table.length; i++) {
+//			if (table[i] != null) {
+//				Entry<K, V> temp = table[i];
+//				while (temp != null) {
+//					counter++;
+//					temp = temp.getNext();
+//				}
+//			}
+//		}
+//		return counter;
+//	}
 
-		return null;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return countElements() == 0;
-	}
-
-	@Override
-	public Object put(Object key, Object value) {
-		int index = index((K) key);
-
-		int endPoint = table.length - index;
-		for (int i = 0; i < endPoint; i++) {
-			Entry<K, V> entry = find(index + i, (K) key);
-			if (entry != null && entry.getKey().equals(key)) {
-
-				Entry<K, V> temp = entry;
-				while (temp.next != null) {
-					temp = temp.getNext();
-				}
-				V tempV = temp.getValue();
-				temp.setNext(new Entry<K, V>((K) key, (V) value));
-
-				return tempV;
-			}
-
-			else if (table[index + i] == null) {
-
-				table[index + i] = new Entry<K, V>((K) key, (V) value);
-				if (countElements() >= 0.75 * table.length) {
-					rehash();
-				}
-				return null;
-			}
-
-			if (i == (table.length - index - 1)) {
-				i = -index;
-				endPoint = Math.min(index, table.length - index);
-			}
-		}
-
-		show();
-		return null;
-	}
-
-	@Override
-	public Object remove(Object key) {
-		if (!isEmpty()) {
-			int index = index((K) key);
-			if (table[index] != null && table[index].key.equals(key)) {
-				V temp = table[index].getValue();
-				table[index] = null;
-				return temp;
-			}
-
-		}
-		return null;
-	}
-
-	@Override
-	public int size() {
-		return countElements();
-	}
-
-	private int countElements() {
-		int temp = 0;
-		for (int i = 0; i < table.length; i++) {
-			if (table[i] != null) {
-				temp++;
-			}
-		}
-		return temp;
-	}
-
-	private void rehash() {
-		Entry<K, V>[] tempTable = (Entry<K, V>[]) new Entry[table.length * 2];
-		for (int i = 0; i < table.length; i++) {
-			tempTable[i] = table[i];
-		}
-		table = tempTable;
-	}
-
-	private int index(K key) {
-		return Math.abs(key.hashCode() % table.length);
-	}
-
-	private Entry<K, V> find(int index, K key) {
-		int indexTemp = index;
-		while (indexTemp < table.length && table[indexTemp] != null) {
-			if (key.equals(table[indexTemp].getKey())) {
-				return table[indexTemp];
-
-			}
-			indexTemp++;
-		}
-		return null;
-
-	}
-
-	private static class Entry<K, V> implements Map.Entry<K, V> {
+	public static class Entry<K, V> implements Map.Entry<K, V> {
 		private K key;
 		private V value;
 		private Entry<K, V> next;
