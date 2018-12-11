@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="banktest/src"/>
+	<classpathentry kind="src" path="lab1/src"/>
+	<classpathentry kind="src" path="lab2/src"/>
+	<classpathentry kind="src" path="lab3/src"/>
+	<classpathentry kind="src" path="lab4/src"/>
+	<classpathentry kind="src" path="lab5/src"/>
+	<classpathentry kind="src" path="lab6/src"/>
+	<classpathentry kind="src" path="ovn_impl-generisk-klass/src"/>
+	<classpathentry kind="src" path="ovn-avrostning/src"/>
+	<classpathentry kind="src" path="ovn-bst/src"/>
+	<classpathentry kind="src" path="ovn-interface/src"/>
+	<classpathentry kind="src" path="ovn-lambdas/src"/>
+	<classpathentry kind="src" path="ovn-linked-list/src"/>
+	<classpathentry kind="src" path="ovn-map-set/src"/>
+	<classpathentry kind="src" path="ovn-priorityqueue/src"/>
+	<classpathentry kind="src" path="ovn-radixsort/src"/>
+	<classpathentry kind="src" path="ovn-rekursion/src"/>
+	<classpathentry kind="src" path="ovn-tree/src"/>
+	<classpathentry kind="output" path="banktest/bin"/>
+</classpath>

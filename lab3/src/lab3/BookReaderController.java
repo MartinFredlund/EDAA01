@@ -56,7 +56,7 @@ public class BookReaderController extends Application {
 		root.setCenter(listView);
 
 		hbox.getChildren().addAll(alpha, freq, text, find);
-		HBox.setHgrow(text, Priority.ALWAYS);
+//		HBox.setHgrow(text, Priority.ALWAYS);
 		root.setBottom(hbox);
 
 		freq.setOnAction(event -> {
