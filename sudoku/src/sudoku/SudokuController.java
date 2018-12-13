@@ -4,6 +4,7 @@ import com.sun.prism.paint.Color;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
@@ -27,8 +28,7 @@ public class SudokuController extends Application {
 	@Override
 	public void start(Stage sudokuSolver) throws Exception {
 		BorderPane root = new BorderPane();
-		Scene scene = new Scene(root, 300, 300);
-
+		Scene scene = new Scene(root, 310, 310);
 		btnHb.getChildren().addAll(solve, clear);
 		root.setBottom(btnHb);
 		root.setCenter(field);
@@ -39,7 +39,7 @@ public class SudokuController extends Application {
 		field.setPadding(new Insets(20, 20, 20, 35));
 		field.setHgap(1);
 		field.setVgap(1);
-		
+
 		TilePane temp;
 		for (int i = 0; i < 9; i++) {
 			temp = new TilePane();
@@ -64,10 +64,41 @@ public class SudokuController extends Application {
 		}
 		// check if solvemöjligt
 		solve.setOnAction(event -> {
-			
+			int[][] board = new int[9][9];
+			for (int i = 0; i < 9; i++) {
+				for (int k = 0; k < 9; k++) {
+					if (numbers[i][k].getLength() != 0) {
+
+						board[i][k] = (int) Double.parseDouble(numbers[i][k].getText());
+					} else {
+						board[i][k] = 0;
+					}
+				}
+			}
+			Sudoku sudoku = new Sudoku(board);
+				if(sudoku.solver()) {
+					
+				int[][] tempBoard = sudoku.getBoard();
+				for (int i = 0; i < 9; i++) {
+					for (int k = 0; k < 9; k++) {
+						numbers[i][k].setText(Integer.toString(tempBoard[i][k]));
+					}
+				}
+			}
+			else {
+				Alert alt = new Alert(Alert.AlertType.WARNING);
+				alt.setHeaderText("Warning");
+				alt.setContentText("Can not find your word, try again.");
+				alt.show();
+			}
 		});
-		clear.setOnAction(event ->{
-			
+
+		clear.setOnAction(event -> {
+			for (int i = 0; i < 9; i++) {
+				for (int k = 0; k < 9; k++) {
+					numbers[i][k].clear();
+				}
+			}
 		});
 
 		Sudoku sudoku = new Sudoku(board);
