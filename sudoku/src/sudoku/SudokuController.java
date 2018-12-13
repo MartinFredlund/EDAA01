@@ -19,11 +19,11 @@ import sudoku.*;
 public class SudokuController extends Application {
 	private int[][] board = new int[9][9];
 
-	Button solve = new Button("Solve");
-	Button clear = new Button("Clear");
-	HBox btnHb = new HBox(10);
-	TilePane field = new TilePane();
-	OneLetterTextField[][] numbers = new OneLetterTextField[9][9];
+	private Button solve = new Button("Solve");
+	private Button clear = new Button("Clear");
+	private HBox btnHb = new HBox(10);
+	private TilePane field = new TilePane();
+	private OneLetterTextField[][] numbers = new OneLetterTextField[9][9];
 
 	@Override
 	public void start(Stage sudokuSolver) throws Exception {
@@ -32,9 +32,9 @@ public class SudokuController extends Application {
 		btnHb.getChildren().addAll(solve, clear);
 		root.setBottom(btnHb);
 		root.setCenter(field);
-		sudokuSolver.setTitle("Sudoku Controller");
+		sudokuSolver.setTitle("Sudoku Solver");
 		sudokuSolver.setScene(scene);
-		sudokuSolver.setResizable(false);
+		sudokuSolver.setResizable(true);
 
 		field.setPadding(new Insets(20, 20, 20, 35));
 		field.setHgap(1);
@@ -47,22 +47,50 @@ public class SudokuController extends Application {
 			temp.setHgap(1);
 			temp.setVgap(1);
 
+			int c = 0;
+			int r = 0;
+			if (i % 3 == 0) {
+				c = 0;
+			}
+			if (i % 3 == 1) {
+				c = 3;
+			}
+			if (i % 3 == 2) {
+				c = 6;
+			}
+			if (i / 3 == 0) {
+				r = 0;
+			}
+			if (i / 3 == 1) {
+				r = 3;
+			}
+			if (i / 3 == 2) {
+				r = 6;
+			}
+
+			int counter = 0;
+
 			for (int j = 0; j < 9; j++) {
 				OneLetterTextField text = new OneLetterTextField();
 				text.setStyle("-fx-background-color: #808080;");
 				temp.setPrefColumns(3);
-
 				if (i % 2 == 0) {
 					text.setStyle("-fx-background-color: #ff0022;");
 				}
-				numbers[i][j] = text;
+
+				if (counter == 3) {
+					counter = 0;
+					c = c - 3;
+					r++;
+				}
+				numbers[r][c] = text;
 				temp.getChildren().add(text);
-
+				c++;
+				counter++;
 			}
-
 			field.getChildren().add(temp);
 		}
-		// check if solvemÃ¶jligt
+		// check if solve möjligt
 		solve.setOnAction(event -> {
 			int[][] board = new int[9][9];
 			for (int i = 0; i < 9; i++) {
@@ -76,16 +104,15 @@ public class SudokuController extends Application {
 				}
 			}
 			Sudoku sudoku = new Sudoku(board);
-				if(sudoku.solver()) {
-					
+			if (sudoku.solver()) {
+
 				int[][] tempBoard = sudoku.getBoard();
 				for (int i = 0; i < 9; i++) {
 					for (int k = 0; k < 9; k++) {
 						numbers[i][k].setText(Integer.toString(tempBoard[i][k]));
 					}
 				}
-			}
-			else {
+			} else {
 				Alert alt = new Alert(Alert.AlertType.WARNING);
 				alt.setHeaderText("Warning");
 				alt.setContentText("Can not find your word, try again.");
@@ -100,8 +127,6 @@ public class SudokuController extends Application {
 				}
 			}
 		});
-
-		Sudoku sudoku = new Sudoku(board);
 		sudokuSolver.show();
 	}
 

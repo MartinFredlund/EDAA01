@@ -28,9 +28,9 @@ public class Sudoku {
 	 * @return true if the current sudoku board is solvable and false if it is not solvable.
 	 */
 	public boolean solver() {
-//		if (solvAble()) {
-//			return solve();
-//		}
+		if (solvAble()) {
+			return solve();
+		}
 		for (int i = 0; i < 9; i++) {
 			System.out.println("");
 			for (int k = 0; k < 9; k++) {
@@ -38,7 +38,7 @@ public class Sudoku {
 			}
 		}
 		System.out.println("");
-		return solve();
+		return false;
 	}
 
 
@@ -92,13 +92,13 @@ public class Sudoku {
 
 		// row check y != i && 
 		for (int i = 0; i < 9; i++) {
-			if (board[x][i] == value) {
+			if (y != i && board[x][i] == value) {
 				return false;
 			}
 		}
 		// column check x != i && 
 		for (int i = 0; i < 9; i++) {
-			if (board[i][y] == value) {
+			if (x != i && board[i][y] == value) {
 				return false;
 			}
 		}
@@ -107,7 +107,7 @@ public class Sudoku {
 		int y1 = (y) % 3;
 		for (int i = x + 2; i > x - 1; i--) {
 			for (int k = y + 2; k > y - 1; k--) {
-				if (true) {
+				if (!start) {
 					if (board[i - x1][k - y1] == value) {
 						return false;
 					}
