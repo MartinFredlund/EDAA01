@@ -1,5 +1,11 @@
 package sudoku;
 
+/**
+ * Sudoku solving class.
+ * 
+ * @author Andreas & Martin
+ *
+ */
 public class Sudoku {
 	private int[][] board = new int[9][9];
 	private int[][] refBoard = new int[9][9];
@@ -7,11 +13,13 @@ public class Sudoku {
 	/**
 	 * Constructor for Sudoku class.
 	 * 
-	 * @param newBoard The sudoku board to be solved.
+	 * @param newBoard
+	 *            The sudoku board to be solved.
 	 */
 	public Sudoku(int[][] newBoard) {
 		this.board = newBoard;
 		this.refBoard = newBoard;
+
 	}
 
 	/**
@@ -20,7 +28,13 @@ public class Sudoku {
 	 * @return returns the current board.
 	 */
 	public int[][] getBoard() {
-		return board;
+		int[][] returnBoard = new int[9][9];
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				returnBoard[i][j] = board[i][j];
+			}
+		}
+		return returnBoard;
 	}
 
 	/**
@@ -31,7 +45,7 @@ public class Sudoku {
 	 */
 	public boolean solver() {
 		if (solvAble()) {
-			return solve();
+			return solve(0, 0);
 		}
 		return false;
 	}
@@ -51,31 +65,69 @@ public class Sudoku {
 		return true;
 	}
 
-	// Rekursive method for solving the given sudoku.
-	private boolean solve() {
-		for (int x = 0; x < 9; x++) {
-			for (int y = 0; y < 9; y++) {
-				if (refBoard[x][y] == 0) {
-					for (int i = 1; i < 10; i++) {
-						if (ruleCheck(i, x, y, false)) {
-							board[x][y] = i;
-							if (solve()) {
-								return true;
-							} else {
-								board[x][y] = 0;
-							}
-						}
+	// // Rekursive method for solving the given sudoku.
+	// private boolean solve() {
+	// for (int x = 0; x < 9; x++) {
+	// for (int y = 0; y < 9; y++) {
+	// if (refBoard[x][y] == 0) {
+	// for (int i = 1; i < 10; i++) {
+	// if (ruleCheck(i, x, y, false)) {
+	// board[x][y] = i;
+	//
+	// if (solve()) {
+	// return true;
+	// } else {
+	// board[x][y] = 0;
+	// }
+	// }
+	// }
+	// return false;
+	// }
+	// }
+	// }
+	//
+	// return true;
+	// }
+
+	private boolean solve(int x, int y) {
+		int newX = x;
+		int newY;
+		if (y != 8) {
+			newY = y + 1;
+
+		} else {
+			newY = 0;
+			newX = x + 1;
+		}
+		if (x == 9) {
+			return true;
+		}
+		if (refBoard[x][y] == 0) {
+			for (int i = 1; i < 10; i++) {
+				if (ruleCheck(i, x, y, false)) {
+					board[x][y] = i;
+					if (solve(newX, newY)) {
+						return true;
+					} else {
+						board[x][y] = 0;
 					}
-					return false;
 				}
 			}
-		}
-
-		return true;
+			return false;
+		} 
+		return solve(newX,newY);
+//		if(solve(newX,newY)) {
+//			return true;
+//		}
+//		else
+//		{
+//			return false;
+//		}
 	}
 
 	// Checks if the given value at the given position (x,y) is ok according to the
 	// suduoku rules.
+
 	private boolean ruleCheck(int value, int x, int y, boolean start) {
 
 		// row check
